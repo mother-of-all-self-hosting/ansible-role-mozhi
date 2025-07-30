@@ -4,24 +4,24 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 ---
-- name: Perform AnonymousOverflow installation tasks
-  when: anonymousoverflow_enabled | bool
+- name: Perform Mozhi installation tasks
+  when: mozhi_enabled | bool
   tags:
     - setup-all
-    - setup-anonymousoverflow
+    - setup-mozhi
     - install-all
-    - install-anonymousoverflow
+    - install-mozhi
   block:
-    - name: Validate AnonymousOverflow configuration
+    - name: Validate Mozhi configuration
       ansible.builtin.include_tasks: "{{ role_path }}/tasks/validate_config.yml"
-    - name: Install AnonymousOverflow
+    - name: Install Mozhi
       ansible.builtin.include_tasks: "{{ role_path }}/tasks/install.yml"
 
-- name: Perform AnonymousOverflow uninstallation tasks
-  when: not anonymousoverflow_enabled | bool
+- name: Perform Mozhi uninstallation tasks
+  when: not mozhi_enabled | bool
   tags:
     - setup-all
-    - setup-anonymousoverflow
+    - setup-mozhi
   block:
-    - name: Uninstall AnonymousOverflow
+    - name: Uninstall Mozhi
       ansible.builtin.include_tasks: "{{ role_path }}/tasks/uninstall.yml"

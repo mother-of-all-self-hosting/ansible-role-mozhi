@@ -2,9 +2,9 @@
 galaxy_info:
   author: Suguru Hirahara
   company: progressiv
-  role_name: anonymousoverflow
+  role_name: mozhi
   namespace: progressiv
-  description: AnonymousOverflow
+  description: Mozhi
   platforms:
     - name: Debian
       versions:
