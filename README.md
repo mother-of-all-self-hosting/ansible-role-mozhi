@@ -7,7 +7,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 # Mozhi Ansible role
 
-This is an [Ansible](https://www.ansible.com/) role which installs [Mozhi](https://github.com/httpjamesm/Mozhi) to run as a [Docker](https://www.docker.com/) container wrapped in a systemd service.
+This is an [Ansible](https://www.ansible.com/) role which installs [Mozhi](https://codeberg.org/aryak/mozhi) to run as a [Docker](https://www.docker.com/) container wrapped in a systemd service.
 
 This role *implicitly* depends on:
 

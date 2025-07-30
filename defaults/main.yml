@@ -1,3 +1,4 @@
+# SPDX-FileCopyrightText: 2023 Arya K
 # SPDX-FileCopyrightText: 2023 - 2024 Nikita Chernyi
 # SPDX-FileCopyrightText: 2023 - 2025 Slavi Pantaleev
 # SPDX-FileCopyrightText: 2024 Sergio Durigan Junior
@@ -7,15 +8,15 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 ---
-# Project source code URL: https://github.com/httpjamesm/Mozhi
+# Project source code URL: https://codeberg.org/aryak/mozhi
 
 mozhi_enabled: true
 
 mozhi_identifier: mozhi
 mozhi_base_path: "/{{ mozhi_identifier }}"
 
-# Only "release" tag is available
-mozhi_version: release
+# Only "latest" tag is available
+mozhi_version: latest
 
 mozhi_uid: ''
 mozhi_gid: ''
@@ -33,24 +34,20 @@ mozhi_hostname: ''
 # technical limitations.
 mozhi_path_prefix: /
 
-# Public facing base URL of the Mozhi service.
-# It should not end with a slash.
-mozhi_base_url: "{{ mozhi_scheme }}://{{ mozhi_hostname }}{{ '' if mozhi_path_prefix == '/' else mozhi_path_prefix }}"
-
-mozhi_container_image: "{{ mozhi_container_image_registry_prefix }}httpjamesm/mozhi:{{ mozhi_container_image_tag }}"
+mozhi_container_image: "{{ mozhi_container_image_registry_prefix }}aryak/mozhi:{{ mozhi_container_image_tag }}"
 mozhi_container_image_tag: "{{ mozhi_version }}"
 mozhi_container_image_registry_prefix: "{{ mozhi_container_image_registry_prefix_upstream }}"
 mozhi_container_image_registry_prefix_upstream: "{{ mozhi_container_image_registry_prefix_upstream_default }}"
-mozhi_container_image_registry_prefix_upstream_default: ghcr.io/
+mozhi_container_image_registry_prefix_upstream_default: codeberg.org/
 mozhi_container_image_force_pull: "{{ mozhi_container_image.endswith(':latest') }}"
 
 mozhi_container_image_self_build: false
-mozhi_container_image_self_build_name: "httpjamesm/mozhi:{{ mozhi_container_image_self_build_repo_version }}"
-mozhi_container_image_self_build_repo: "https://github.com/httpjamesm/Mozhi.git"
-mozhi_container_image_self_build_repo_version: "{{ mozhi_version if mozhi_version != 'latest' else 'main' }}"
+mozhi_container_image_self_build_name: "mozhi/mozhi:{{ mozhi_container_image_self_build_repo_version }}"
+mozhi_container_image_self_build_repo: "https://codeberg.org/aryak/mozhi.git"
+mozhi_container_image_self_build_repo_version: "master"
 mozhi_container_image_self_build_src_files_path: "{{ mozhi_base_path }}/docker-src"
 
-# Controls whether the container exposes its HTTP port (tcp/8080 in the container).
+# Controls whether the container exposes its HTTP port (tcp/3000 in the container).
 #
 # Takes an "<ip>:<port>" or "<port>" value (e.g. "127.0.0.1:2586"), or empty string to not expose.
 mozhi_container_http_host_bind_port: ''
@@ -59,7 +56,7 @@ mozhi_container_http_host_bind_port: ''
 mozhi_container_network: "{{ mozhi_identifier }}"
 
 # The port number in the container
-mozhi_container_http_port: 8080
+mozhi_container_http_port: 3000
 
 # A list of additional container networks that the container would be connected to.
 # The role does not create these networks, so make sure they already exist.
@@ -178,8 +175,33 @@ mozhi_systemd_required_services_list_custom: []
 # List of systemd services that the Mozhi systemd service wants
 mozhi_systemd_wanted_services_list: []
 
-mozhi_environment_variable_app_url: "{{ mozhi_base_url }}"
-mozhi_environment_variable_jwt_signing_secret: 'secret'
+# Specify port the webserver listens on
+mozhi_environment_variables_mozhi_port: "{{ mozhi_container_http_port }}"
+
+# Specify URL of LibreTranslate instance
+mozhi_environment_variables_mozhi_libretranslate_url: ''
+
+# Specify default source language if one is not set by user
+mozhi_environment_variables_mozhi_default_source_lang: ''
+
+# Control if autodetect is preferred, if available instead of specified/default source language
+mozhi_environment_variables_mozhi_default_prefer_autodetect: false
+
+# Specify default target language if one is not set by user
+mozhi_environment_variables_mozhi_default_target_lang: en
+
+# Specify default engine if one is not set by user
+# Valid values: google, deepl, duckduckgo, libre, mymemory, reverso, yandex
+mozhi_environment_variables_mozhi_default_engine: duckduckgo
+
+# Control if each engine is enabled
+mozhi_environment_variables_mozhi_google_enabled: true
+mozhi_environment_variables_mozhi_reverso_enabled: true
+mozhi_environment_variables_mozhi_deepl_enabled: true
+mozhi_environment_variables_mozhi_libretranslate_enabled: true
+mozhi_environment_variables_mozhi_yandex_enabled: true
+mozhi_environment_variables_mozhi_mymemory_enabled: true
+mozhi_environment_variables_mozhi_duckduckgo_enabled: true
 
 # Additional environment variables.
 mozhi_environment_variables_additional_variables: ''
