@@ -62,16 +62,17 @@
       register: mozhi_git_pull_results
 
     - name: Ensure Mozhi container image is built
-      community.docker.docker_image:
-        name: "{{ mozhi_container_image_self_build_name }}"
-        source: build
-        force_source: "{{ mozhi_git_pull_results.changed if ansible_version.major > 2 or ansible_version.minor >= 8 else omit }}"
-        force: "{{ omit if ansible_version.major > 2 or ansible_version.minor >= 8 else mozhi_git_pull_results.changed }}"
-        build:
-          dockerfile: Dockerfile
-          path: "{{ mozhi_container_image_self_build_src_files_path }}"
-          pull: true
-          args:
+      ansible.builtin.shell:
+        chdir: "{{ mozhi_container_image_self_build_src_files_path }}"
+        cmd: |
+          {{ devture_systemd_docker_base_host_command_docker }} build \
+          -t "{{ mozhi_container_image_self_build_name }}" \
+          -f Dockerfile \
+          .
+      environment:
+        BUILDPLATFORM: "{{ mozhi_container_image_self_build_environment_buildplatform }}"
+      register: result
+      changed_when: "'Successfully built' in result.stdout or ('writing image' in result.stderr and 'CACHED' not in result.stderr)"
 
 - name: Ensure Mozhi container network is created via community.docker.docker_network
   when: devture_systemd_docker_base_container_network_creation_method == 'ansible-module'

@@ -46,6 +46,7 @@ mozhi_container_image_self_build_name: "mozhi/mozhi:{{ mozhi_container_image_sel
 mozhi_container_image_self_build_repo: "https://codeberg.org/aryak/mozhi.git"
 mozhi_container_image_self_build_repo_version: "master"
 mozhi_container_image_self_build_src_files_path: "{{ mozhi_base_path }}/docker-src"
+mozhi_container_image_self_build_environment_buildplatform: linux/amd64
 
 # Controls whether the container exposes its HTTP port (tcp/3000 in the container).
 #
