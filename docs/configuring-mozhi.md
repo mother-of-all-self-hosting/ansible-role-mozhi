@@ -20,9 +20,9 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 This is an [Ansible](https://www.ansible.com/) role which installs [Mozhi](https://codeberg.org/aryak/mozhi) to run as a [Docker](https://www.docker.com/) container wrapped in a systemd service.
 
-Mozhi allows you to view StackOverflow threads without exposing your IP address, browsing habits, and other browser fingerprinting data to the website.
+Mozhi is a frontend for translation engines which supports Google, Reverso, LibreTranslate, etc.
 
-See the project's [documentation](https://codeberg.org/aryak/mozhi/blob/main/README.md) to learn what Mozhi does and why it might be useful to you.
+See the project's [documentation](https://codeberg.org/aryak/mozhi/src/branch/master/README.md) to learn what Mozhi does and why it might be useful to you.
 
 ## Adjusting the playbook configuration
 
@@ -66,7 +66,7 @@ Take a look at:
 
 - [`defaults/main.yml`](../defaults/main.yml) for some variables that you can customize via your `vars.yml` file. You can override settings (even those that don't have dedicated playbook variables) using the `mozhi_environment_variables_additional_variables` variable
 
-See its [`docker-compose.example.yml`](https://codeberg.org/aryak/mozhi/blob/main/docker-compose.example.yml) for a complete list of Mozhi's config options that you could put in `mozhi_environment_variables_additional_variables`.
+See [this section](https://codeberg.org/aryak/mozhi/src/branch/master/README.md#configuration) on the documentation for a complete list of Mozhi's config options that you could put in `mozhi_environment_variables_additional_variables`.
 
 ## Installing
 
@@ -81,10 +81,6 @@ If you use the MASH playbook, the shortcut commands with the [`just` program](ht
 ## Usage
 
 After running the command for installation, Mozhi becomes available at the specified hostname like `https://example.com`.
-
-[Libredirect](https://libredirect.github.io/), an extension for Firefox and Chromium-based desktop browsers, has support for redirections to Mozhi. See [this section](https://codeberg.org/aryak/mozhi/blob/main/README.md#how-to-make-stack-overflow-links-take-you-to-mozhi-automatically) on the official documentation for more information.
-
-If you would like to make your instance public so that it can be used by anyone including Libredirect, please consider to send a PR to the [upstream project](https://codeberg.org/aryak/mozhi) to add yours to [`instances.json`](https://codeberg.org/aryak/mozhi/blob/main/instances.json), which Libredirect automatically fetches using a script (see [this FAQ entry](https://libredirect.github.io/faq.html#where_the_hell_are_those_instances_coming_from)).
 
 ## Troubleshooting
 
