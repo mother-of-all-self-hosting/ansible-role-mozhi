@@ -16,6 +16,12 @@
     - mozhi_path_prefix
     - mozhi_container_network
 
+- name: Fail if default Mozhi engine type is invalid
+  ansible.builtin.fail:
+    msg: >-
+      mozhi_environment_variables_mozhi_default_engine must be 'google', 'deepl', 'duckduckgo', 'libre', 'mymemory', 'reverso', or 'yandex'
+  when: "mozhi_environment_variables_mozhi_default_engine not in ['google', 'deepl', 'duckduckgo', 'libre', 'mymemory', 'reverso', 'yandex']"
+
 - name: Run if Traefik is enabled
   when: mozhi_container_labels_traefik_enabled | bool
   block:
