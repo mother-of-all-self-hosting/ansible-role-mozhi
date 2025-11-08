@@ -18,14 +18,14 @@ mozhi_base_path: "/{{ mozhi_identifier }}"
 # Only "latest" tag is available
 mozhi_version: latest
 
-mozhi_uid: ''
-mozhi_gid: ''
+mozhi_uid: ""
+mozhi_gid: ""
 
 # Specify URI scheme for mozhi_base_url.
 mozhi_scheme: https
 
 # The hostname at which Mozhi is served.
-mozhi_hostname: ''
+mozhi_hostname: ""
 
 # The path at which Mozhi is exposed.
 # This value must either be `/` or not end with a slash (e.g. `/mozhi`).
@@ -51,7 +51,7 @@ mozhi_container_image_self_build_environment_buildplatform: linux/amd64
 # Controls whether the container exposes its HTTP port (tcp/3000 in the container).
 #
 # Takes an "<ip>:<port>" or "<port>" value (e.g. "127.0.0.1:2586"), or empty string to not expose.
-mozhi_container_http_host_bind_port: ''
+mozhi_container_http_host_bind_port: ""
 
 # The base container network. It will be auto-created by this role if it doesn't exist already.
 mozhi_container_network: "{{ mozhi_identifier }}"
@@ -117,7 +117,7 @@ mozhi_container_labels_traefik_additional_response_headers_custom: {}
 # mozhi_container_labels_additional_labels: |
 #   my.label=1
 #   another.label="here"
-mozhi_container_labels_additional_labels: ''
+mozhi_container_labels_additional_labels: ""
 
 # A list of extra arguments to pass to the container (`docker run` command)
 mozhi_container_extra_arguments: []
@@ -185,10 +185,10 @@ mozhi_systemd_wanted_services_list_custom: []
 mozhi_environment_variables_mozhi_port: "{{ mozhi_container_http_port }}"
 
 # Specify URL of LibreTranslate instance
-mozhi_environment_variables_mozhi_libretranslate_url: ''
+mozhi_environment_variables_mozhi_libretranslate_url: ""
 
 # Specify default source language if one is not set by user
-mozhi_environment_variables_mozhi_default_source_lang: ''
+mozhi_environment_variables_mozhi_default_source_lang: ""
 
 # Control if autodetect is preferred, if available instead of specified/default source language
 mozhi_environment_variables_mozhi_default_prefer_autodetect: false
@@ -210,4 +210,4 @@ mozhi_environment_variables_mozhi_mymemory_enabled: true
 mozhi_environment_variables_mozhi_duckduckgo_enabled: true
 
 # Additional environment variables.
-mozhi_environment_variables_additional_variables: ''
+mozhi_environment_variables_additional_variables: ""
