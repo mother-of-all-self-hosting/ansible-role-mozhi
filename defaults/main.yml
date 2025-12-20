@@ -181,6 +181,9 @@ mozhi_systemd_wanted_services_list_default: []
 mozhi_systemd_wanted_services_list_auto: []
 mozhi_systemd_wanted_services_list_custom: []
 
+# Specify the timezone
+mozhi_environment_variables_tz: UTC
+
 # Specify port the webserver listens on
 mozhi_environment_variables_mozhi_port: "{{ mozhi_container_http_port }}"
 
