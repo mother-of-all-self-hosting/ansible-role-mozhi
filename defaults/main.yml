@@ -27,7 +27,7 @@ mozhi_scheme: https
 # The hostname at which Mozhi is served.
 mozhi_hostname: ""
 
-# The path at which Mozhi is exposed.
+# The path at which Mozhi is served.
 # This value must either be `/` or not end with a slash (e.g. `/mozhi`).
 #
 # Hosting Mozhi under a subpath does not seem to be possible due to Mozhi's
