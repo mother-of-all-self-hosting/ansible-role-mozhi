@@ -122,7 +122,7 @@ mozhi_container_labels_additional_labels: "{{ mozhi_container_labels_additional_
 mozhi_container_labels_additional_labels_auto: {}
 mozhi_container_labels_additional_labels_custom: {}
 
-# A list of extra arguments to pass to the container (`docker run` command)
+# A list of extra arguments to pass to the container (`docker create` command)
 mozhi_container_extra_arguments: "{{ mozhi_container_extra_arguments_auto + mozhi_container_extra_arguments_custom }}"
 mozhi_container_extra_arguments_auto: []
 mozhi_container_extra_arguments_custom: []
