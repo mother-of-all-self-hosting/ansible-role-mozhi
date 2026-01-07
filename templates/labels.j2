@@ -56,4 +56,6 @@ traefik.http.routers.{{ mozhi_identifier }}.tls.certResolver={{ mozhi_container_
 traefik.http.services.{{ mozhi_identifier }}.loadbalancer.server.port={{ mozhi_container_http_port }}
 {% endif %}
 
-{{ mozhi_container_labels_additional_labels }}
+{% for arg in mozhi_container_labels_additional_labels %}
+{{ arg }}
+{% endfor %}
