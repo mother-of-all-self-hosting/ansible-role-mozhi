@@ -21,7 +21,7 @@ mozhi_version: latest
 mozhi_uid: ""
 mozhi_gid: ""
 
-# Specify URI scheme for mozhi_base_url.
+# The scheme used for serving Mozhi.
 mozhi_scheme: https
 
 # The hostname at which Mozhi is served.
