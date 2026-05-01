@@ -1,5 +1,5 @@
 # SPDX-FileCopyrightText: 2023 Slavi Pantaleev
-# SPDX-FileCopyrightText: 2025 Suguru Hirahara
+# SPDX-FileCopyrightText: 2025, 2026 Suguru Hirahara
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
@@ -16,14 +16,15 @@
 - name: Fail if required Mozhi settings not defined
   ansible.builtin.fail:
     msg: >-
-      You need to define a required configuration setting (`{{ item }}`).
-  when: "lookup('vars', item, default='') | string | length == 0"
+      You need to define a required configuration setting (`{{ item.name }}`).
+  when: "item.when | bool and lookup('vars', item.name, default='') | string | length == 0"
   with_items:
-    - mozhi_uid
-    - mozhi_gid
-    - mozhi_hostname
-    - mozhi_path_prefix
-    - mozhi_container_network
+    - { "name": "mozhi_uid", when: true }
+    - { "name": "mozhi_gid", when: true }
+    - { "name": "mozhi_hostname", when: true }
+    - { "name": "mozhi_path_prefix", when: true }
+    - { "name": "mozhi_container_network", when: true }
+    - { "name": "mozhi_container_labels_traefik_middleware_basic_auth_users", when: "{{ mozhi_container_labels_traefik_middleware_basic_auth_enabled }}" }
 
 - name: Fail if default Mozhi engine type is invalid
   ansible.builtin.fail:
