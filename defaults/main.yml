@@ -39,7 +39,6 @@ mozhi_container_image_tag: "{{ mozhi_version }}"
 mozhi_container_image_registry_prefix: "{{ mozhi_container_image_registry_prefix_upstream }}"
 mozhi_container_image_registry_prefix_upstream: "{{ mozhi_container_image_registry_prefix_upstream_default }}"
 mozhi_container_image_registry_prefix_upstream_default: codeberg.org/
-mozhi_container_image_force_pull: "{{ mozhi_container_image.endswith(':latest') }}"
 
 mozhi_container_image_self_build: false
 mozhi_container_image_self_build_name: "mozhi/mozhi:{{ mozhi_container_image_self_build_repo_version }}"
