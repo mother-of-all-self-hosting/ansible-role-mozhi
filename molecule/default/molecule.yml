@@ -33,7 +33,8 @@ provisioner:
         # Variables for Mozhi
         mozhi_uid: 1000
         mozhi_gid: 1000
-        mozhi_hostname: mozhi
+        mozhi_scheme: http
+        mozhi_hostname: localhost
         mozhi_container_labels_traefik_enabled: false
         mozhi_container_http_host_bind_port: 3000
   env:
