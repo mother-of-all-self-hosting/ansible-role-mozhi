@@ -27,6 +27,10 @@ provisioner:
   inventory:
     group_vars:
       all:
+        # Helper variables
+        mozhi_debug_service_enabled: false
+
+        # Variables for Mozhi
         mozhi_uid: 1000
         mozhi_gid: 1000
         mozhi_hostname: mozhi

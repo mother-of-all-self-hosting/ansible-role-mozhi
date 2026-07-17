@@ -23,6 +23,12 @@
         fail_msg: "mozhi.service not active ({{ mozhi_service.status.ActiveState }})"
         success_msg: "mozhi.service is active"
 
+    - name: Retrieve Mozhi service log for debugging
+      when: mozhi_debug_service_enabled | bool
+      ansible.builtin.command:
+        cmd: journalctl -xeu mozhi.service
+      changed_when: false
+
     - name: Wait for Mozhi HTTP endpoint to respond (up to 10m)
       ansible.builtin.uri:
         url: "http://localhost:3000/"
