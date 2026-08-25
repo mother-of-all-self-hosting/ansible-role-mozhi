@@ -1,3 +1,4 @@
+# SPDX-FileCopyrightText: 2026 Slavi Pantaleev
 # SPDX-FileCopyrightText: 2026 spatterlight
 # SPDX-FileCopyrightText: 2026 Suguru Hirahara
 #
@@ -31,13 +32,58 @@ provisioner:
         # Helper variables
         mozhi_debug_service_enabled: false
 
+        # The container and network names the role derives from its identifier.
+        # Role defaults are not in scope in every play, so they are spelled out.
+        mozhi_molecule_container: mozhi
+        mozhi_molecule_container_network: mozhi
+
+        # A directory mounted into the container through the role's own
+        # `mozhi_container_additional_volumes`. Kept in step with the `default`
+        # scenario so that both exercise the same unit file; it is the `default`
+        # scenario that asserts on the resulting mount.
+        mozhi_molecule_extra_path: /var/lib/mozhi-molecule/extra
+        mozhi_molecule_extra_path_in_container: /molecule
+
+        # Where the role clones Mozhi's source to when self-building, and the
+        # name it gives the image it builds there. Both are Jinja-derived in
+        # defaults/main.yml, so they cannot be read back out of it in a verify
+        # play and are spelled out here instead.
+        mozhi_molecule_selfbuild_src_path: /mozhi/docker-src
+        mozhi_molecule_selfbuild_image_repository: mozhi/mozhi
+
         # Variables for Mozhi
         mozhi_uid: 1000
         mozhi_gid: 1000
         mozhi_scheme: http
-        mozhi_hostname: localhost
-        mozhi_container_labels_traefik_enabled: false
-        mozhi_container_http_host_bind_port: 3000
+        mozhi_hostname: mozhi.molecule.example.com
+
+        # Deliberately not Mozhi's own default of 3000, so that the freshly
+        # built image answering here at all means the role's env file reached
+        # the process it built. See verify.yml.
+        mozhi_container_http_port: 8347
+        mozhi_container_http_host_bind_port: 8347
+
+        mozhi_container_labels_traefik_enabled: true
+
+        mozhi_container_additional_volumes_custom:
+          - type: bind
+            src: "{{ mozhi_molecule_extra_path }}"
+            dst: "{{ mozhi_molecule_extra_path_in_container }}"
+            options: readonly
+
+        # The same deliberately non-default configuration as the `default`
+        # scenario uses, so that a self-built Mozhi is checked to honour it too
+        # - the image is built from `master` and can be many months ahead of the
+        # `latest` tag the other scenario runs.
+        mozhi_environment_variables_tz: Europe/Sofia
+        mozhi_environment_variables_mozhi_default_engine: reverso
+        mozhi_environment_variables_mozhi_default_source_lang: fr
+        mozhi_environment_variables_mozhi_default_prefer_autodetect: false
+        mozhi_environment_variables_mozhi_default_target_lang: de
+        mozhi_environment_variables_mozhi_google_enabled: false
+        mozhi_environment_variables_mozhi_libretranslate_url: http://libretranslate.molecule.example.com:5000
+        mozhi_environment_variables_additional_variables: |
+          MOZHI_USER_AGENT=MASH-Molecule-Verify
 
         # Test self-building
         mozhi_container_image_self_build: true

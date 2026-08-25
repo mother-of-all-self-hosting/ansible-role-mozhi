@@ -1,3 +1,4 @@
+# SPDX-FileCopyrightText: 2026 Slavi Pantaleev
 # SPDX-FileCopyrightText: 2026 spatterlight
 # SPDX-FileCopyrightText: 2026 Suguru Hirahara
 #
@@ -31,13 +32,87 @@ provisioner:
         # Helper variables
         mozhi_debug_service_enabled: false
 
+        # The container and network names the role derives from its identifier.
+        # Role defaults are not in scope in every play, so they are spelled out.
+        mozhi_molecule_container: mozhi
+        mozhi_molecule_container_network: mozhi
+
+        # A directory mounted into the container through the role's own
+        # `mozhi_container_additional_volumes`. Mozhi does not read anything
+        # from it - its only job is to be visible in `docker inspect`, so that
+        # the variable silently going missing from the systemd unit again gets
+        # caught. See molecule/verify-mozhi.yml.
+        mozhi_molecule_extra_path: /var/lib/mozhi-molecule/extra
+        mozhi_molecule_extra_path_in_container: /molecule
+
+        # Where the negative control (an unconfigured Mozhi, see
+        # molecule/verify-mozhi.yml) is published. Mozhi listens on 3000 when
+        # it is told nothing, which is exactly the point of the control.
+        mozhi_molecule_control_port: 38099
+        mozhi_molecule_control_container_port: 3000
+
         # Variables for Mozhi
         mozhi_uid: 1000
         mozhi_gid: 1000
         mozhi_scheme: http
-        mozhi_hostname: localhost
-        mozhi_container_labels_traefik_enabled: false
-        mozhi_container_http_host_bind_port: 3000
+        mozhi_hostname: mozhi.molecule.example.com
+
+        # Deliberately not Mozhi's own default of 3000. The role passes this
+        # through to the process as `MOZHI_PORT`, and an unconfigured Mozhi
+        # listens on 3000 - so the scenario only gets an answer here at all if
+        # the role's env file reached the process.
+        mozhi_container_http_port: 8347
+        mozhi_container_http_host_bind_port: 8347
+
+        # Left on, even though no Traefik runs here: the labels file is a
+        # second role-rendered file (next to the env file) that has to reach
+        # the container, and `docker inspect` is where that gets checked.
+        mozhi_container_labels_traefik_enabled: true
+
+        # The role declares `mozhi_container_additional_volumes` but did not
+        # render it into the systemd unit until recently, so mounting a
+        # directory through it is what keeps that from silently regressing.
+        mozhi_container_additional_volumes_custom:
+          - type: bind
+            src: "{{ mozhi_molecule_extra_path }}"
+            dst: "{{ mozhi_molecule_extra_path_in_container }}"
+            options: readonly
+
+        # Every one of these is deliberately something other than both the
+        # role's own default and the value an unconfigured Mozhi ends up with,
+        # so that a value showing up in the served page or in /api/engines can
+        # only have come through the role's env file:
+        #
+        # - Mozhi falls back to `google` as the default engine when
+        #   MOZHI_DEFAULT_ENGINE is unset, and the role's own default is
+        #   `duckduckgo`, so this asks for a third value
+        # - an unset MOZHI_DEFAULT_SOURCE_LANG becomes `auto`, and `reverso`
+        #   does not even offer `auto`, so a preselected `fr` cannot be an
+        #   accident
+        # - an unset MOZHI_DEFAULT_TARGET_LANG becomes `en`, which is also the
+        #   role's default, so this asks for `de`
+        mozhi_environment_variables_tz: Europe/Sofia
+        mozhi_environment_variables_mozhi_default_engine: reverso
+        mozhi_environment_variables_mozhi_default_source_lang: fr
+        mozhi_environment_variables_mozhi_default_prefer_autodetect: false
+        mozhi_environment_variables_mozhi_default_target_lang: de
+
+        # Disabling Google is what makes /api/engines differ from an
+        # unconfigured instance's in both directions: this instance is missing
+        # `google` and has `libre`, while an unconfigured one has `google` and
+        # is missing `libre`. See molecule/verify-mozhi.yml for why the other
+        # engine switches are not asserted on.
+        mozhi_environment_variables_mozhi_google_enabled: false
+
+        # Nothing here ever talks to it - it only has to be a non-empty value
+        # that an unconfigured Mozhi does not have.
+        mozhi_environment_variables_mozhi_libretranslate_url: http://libretranslate.molecule.example.com:5000
+
+        # The free-form escape hatch, carrying a setting that the role has no
+        # dedicated variable for. It takes a different path through the
+        # template than everything above.
+        mozhi_environment_variables_additional_variables: |
+          MOZHI_USER_AGENT=MASH-Molecule-Verify
   env:
     # Workaround for https://github.com/ansible/molecule/issues/4391
     ANSIBLE_ROLES_PATH: ${MOLECULE_PROJECT_DIRECTORY}/..:/.ansible/roles:/usr/share/ansible/roles:/etc/ansible/roles:~/.ansible/roles

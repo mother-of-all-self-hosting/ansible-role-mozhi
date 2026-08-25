@@ -1,3 +1,4 @@
+# SPDX-FileCopyrightText: 2026 Slavi Pantaleev
 # SPDX-FileCopyrightText: 2026 spatterlight
 # SPDX-FileCopyrightText: 2026 Suguru Hirahara
 #
@@ -27,3 +28,12 @@
       vars:
         docker_daemon_options:
           storage-driver: vfs
+
+    # Mounted into the container read-only through the role's own
+    # `mozhi_container_additional_volumes`. Mozhi never reads it; it only has to
+    # be there for the mount to be checked in `docker inspect`. See verify.yml.
+    - name: Ensure the directory mounted through the role's additional volumes exists
+      ansible.builtin.file:
+        path: "{{ mozhi_molecule_extra_path }}"
+        state: directory
+        mode: "0755"
