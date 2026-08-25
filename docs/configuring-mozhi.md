@@ -1,6 +1,6 @@
 <!--
 SPDX-FileCopyrightText: 2020 - 2024 MDAD project contributors
-SPDX-FileCopyrightText: 2020 - 2024 Slavi Pantaleev
+SPDX-FileCopyrightText: 2020 - 2026 Slavi Pantaleev
 SPDX-FileCopyrightText: 2020 Aaron Raimist
 SPDX-FileCopyrightText: 2020 Chris van Dijk
 SPDX-FileCopyrightText: 2020 Dominik Zajac
@@ -57,6 +57,24 @@ mozhi_hostname: "example.com"
 After adjusting the hostname, make sure to adjust your DNS records to point the domain to your server.
 
 **Note**: hosting Mozhi under a subpath (by configuring the `mozhi_path_prefix` variable) does not seem to be possible due to Mozhi's technical limitations.
+
+### Choosing which translation engines are offered
+
+The role exposes a switch per engine (`mozhi_environment_variables_mozhi_google_enabled`, `mozhi_environment_variables_mozhi_deepl_enabled`, and so on), each of which becomes a `MOZHI_*_ENABLED` environment variable.
+
+**Mozhi only acts on the first of them that is switched off.** Its engine list is built by a single if/else-if chain (`EngineList` in [`utils/main.go`](https://codeberg.org/aryak/mozhi/src/branch/master/utils/main.go)), which walks the engines in the order Google, DeepL, DuckDuckGo, LibreTranslate, MyMemory, Reverso, Yandex, removes the first one it finds switched off, and then stops looking. Switching off two engines at once therefore removes only the earlier of the two, and switching off Google means no other switch has any effect at all. This is an upstream limitation rather than something this role can work around.
+
+LibreTranslate is a further special case: Mozhi hides it unless `MOZHI_LIBRETRANSLATE_URL` is set, since it has no public instance to fall back on. This role always writes that variable into the env file, even when `mozhi_environment_variables_mozhi_libretranslate_url` is left empty, so on a default installation LibreTranslate stays in the list of offered engines and translating with it fails at request time. If you do not run a LibreTranslate instance, set:
+
+```yaml
+mozhi_environment_variables_mozhi_libretranslate_enabled: false
+```
+
+and make sure no engine earlier in the chain above is switched off, or that switch will never be reached.
+
+### Keeping up with new Mozhi releases
+
+Mozhi publishes no versioned container images — [its repository](https://codeberg.org/aryak/mozhi) carries no git tags and no releases, and its container registry carries only a `latest` tag. `mozhi_version` is therefore the literal `latest`, and running the playbook pulls whatever `latest` points at that day. There is no other tag to pin to.
 
 ### Extending the configuration
 
