@@ -15,7 +15,27 @@ mozhi_enabled: true
 mozhi_identifier: mozhi
 mozhi_base_path: "/{{ mozhi_identifier }}"
 
-# Only "latest" tag is available
+# Mozhi has no versions in the sense the rest of the fleet uses the word.
+#
+# - https://codeberg.org/aryak/mozhi carries no git tags and publishes no
+#   releases at all - it only has a `master` branch
+# - its container registry carries exactly one tag, `latest`. The project's own
+#   `.gitea/workflows/push.yml` asks `docker/build-push-action` for
+#   `tags: codeberg.org/aryak/mozhi:latest` and for nothing else.
+#
+# So there is deliberately no `# renovate:` annotation on this variable: there
+# is no versioned tag for Renovate to move it to, and `latest` is not a version
+# it could compare anything against. See `.github/renovate.json` for what that
+# means for automerging in this repository.
+#
+# A moving `latest` also means that an `ansible-playbook` run can quietly bring
+# in a newer Mozhi, and that pinning is not available as a way out - there is no
+# other tag to pin to. That is upstream's publishing model, not a choice of this
+# role's.
+#
+# This repository's own release tags (`v2025.6.25-N`) encode the absence of an
+# upstream version: the version part is a placeholder and the release counter
+# carries all of the information. See `bin/compute-next-tag.sh`.
 mozhi_version: latest
 
 mozhi_uid: ""

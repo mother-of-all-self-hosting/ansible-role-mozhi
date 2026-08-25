@@ -1,5 +1,11 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "description": [
+    "This role deliberately does not extend the shared `patch-automerge` preset.",
+    "Mozhi publishes no versioned container images: https://codeberg.org/aryak/mozhi carries no git tags and no releases, only a `master` branch, and its container registry carries exactly one tag - `latest` - because the project's own `.gitea/workflows/push.yml` asks `docker/build-push-action` for `tags: codeberg.org/aryak/mozhi:latest` and for nothing else. `mozhi_version` in defaults/main.yml is therefore the literal `latest`, carries no `# renovate:` annotation, and there is no patch-level bump for the preset to automerge - there is nothing here for the shared preset's custom manager to track at all.",
+    "What Renovate does track here (GitHub Actions, prek hooks, mise tools, the Molecule Python requirements and the Ansible roles and collections the Molecule scenarios install) is already automerged on a branch by the shared default preset, so the automation this role needs is in place without the patch-automerge preset.",
+    "Should Mozhi ever start publishing versioned images and this role pin one, revisit: Mozhi is stateless - it keeps no database, is given no writable volume, and the role runs it with a read-only root filesystem and all capabilities dropped - so a patch bump carries no migration risk to a fresh-install test. The Molecule `default` scenario does run the image the role names, from the image ID that tag points at at the time of the run, and reads the role's configuration back out of the running process rather than off the disk. The evidence for automerging patch bumps would be there."
+  ],
   "extends": [
     "github>mother-of-all-self-hosting/renovate-config#v1.0.0"
   ]
