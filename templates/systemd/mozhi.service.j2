@@ -35,6 +35,9 @@ ExecStartPre={{ devture_systemd_docker_base_host_command_docker }} create \
       {% endif %}
       --env-file={{ mozhi_base_path }}/env \
       --label-file={{ mozhi_base_path }}/labels \
+      {% for volume in mozhi_container_additional_volumes %}
+      --mount type={{ volume.type | default('bind' if '/' in volume.src else 'volume') }},src={{ volume.src }},dst={{ volume.dst }}{{ (',' + volume.options) if volume.options | default('') else '' }} \
+      {% endfor %}
       {% for arg in mozhi_container_extra_arguments %}
       {{ arg }} \
       {% endfor %}
