@@ -105,7 +105,7 @@
 
     - name: Read the Mozhi container the role created
       ansible.builtin.command:
-        cmd: "docker inspect {{ mozhi_molecule_container }}"
+        cmd: "docker container inspect {{ mozhi_molecule_container }}"
       register: mozhi_container_raw
       changed_when: false
 
