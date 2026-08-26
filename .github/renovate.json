@@ -7,6 +7,6 @@
     "Should Mozhi ever start publishing versioned images and this role pin one, revisit: Mozhi is stateless - it keeps no database, is given no writable volume, and the role runs it with a read-only root filesystem and all capabilities dropped - so a patch bump carries no migration risk to a fresh-install test. The Molecule `default` scenario does run the image the role names, from the image ID that tag points at at the time of the run, and reads the role's configuration back out of the running process rather than off the disk. The evidence for automerging patch bumps would be there."
   ],
   "extends": [
-    "github>mother-of-all-self-hosting/renovate-config#v1.0.0"
+    "github>mother-of-all-self-hosting/renovate-config#v1.1.0"
   ]
 }
