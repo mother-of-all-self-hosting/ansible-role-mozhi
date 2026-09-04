@@ -430,8 +430,8 @@
     - name: Show the Mozhi verification summary
       ansible.builtin.debug:
         msg:
-          - "systemd: mozhi.service is {{ mozhi_service.status.ActiveState }}"
-          - "unconfigured image: engines={{ mozhi_control_engines.json.keys() | sort | list }}"
-          - "configured: engines={{ mozhi_engines.json.keys() | sort | list }}"
-          - "front page markers: {{ mozhi_verify_page_markers }}"
-          - "image: {{ mozhi_container.Config.Image }} ({{ mozhi_container.Image }}), built with {{ mozhi_build_info.json }}"
+          - "Mozhi systemd: mozhi.service is {{ mozhi_service.status.ActiveState }}"
+          - "Mozhi unconfigured image: engines={{ mozhi_control_engines.json.keys() | sort | list }}"
+          - "Mozhi configured: engines={{ mozhi_engines.json.keys() | sort | list }}"
+          - "Mozhi front page markers: {{ mozhi_verify_page_markers }}"
+          - "Mozhi image: {{ mozhi_container.Config.Image }} ({{ mozhi_container.Image }}), built with {{ mozhi_build_info.json }}"

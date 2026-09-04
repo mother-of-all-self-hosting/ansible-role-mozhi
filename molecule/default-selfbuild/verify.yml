@@ -250,10 +250,10 @@
           Mozhi did not restart over 45 seconds of watching (restarts so far:
           {{ mozhi_restarts_after.status.NRestarts }})
 
-    - name: Show the self-build verification summary
+    - name: Show the Mozhi verification summary
       ansible.builtin.debug:
         msg:
-          - "systemd: mozhi.service is {{ mozhi_service.status.ActiveState }}"
-          - "source: {{ mozhi_defaults.mozhi_container_image_self_build_repo }} at {{ mozhi_selfbuild_head.stdout | trim }}"
-          - "image: {{ mozhi_container.Config.Image }} ({{ mozhi_container.Image }}), built with {{ mozhi_build_info.json }}"
-          - "engines: {{ mozhi_engines.json.keys() | sort | list }}"
+          - "Mozhi systemd: mozhi.service is {{ mozhi_service.status.ActiveState }}"
+          - "Mozhi source: {{ mozhi_defaults.mozhi_container_image_self_build_repo }} at {{ mozhi_selfbuild_head.stdout | trim }}"
+          - "Mozhi image: {{ mozhi_container.Config.Image }} ({{ mozhi_container.Image }}), built with {{ mozhi_build_info.json }}"
+          - "Mozhi engines: {{ mozhi_engines.json.keys() | sort | list }}"
