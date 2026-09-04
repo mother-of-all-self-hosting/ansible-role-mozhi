@@ -50,10 +50,10 @@
       - "<option value=\"{{ mozhi_environment_variables_mozhi_default_target_lang }}\" selected>"
 
   tasks:
-    # Only leaf literals may be read out of this - anything Jinja-derived would
-    # be resolved against an empty namespace. Loading it under a name of its own
-    # also keeps it from outranking the scenario's own group_vars.
-    - name: Load the Mozhi role defaults
+    # The role is not included in this playbook, so its defaults are not in
+    # scope. Reading defaults/main.yml directly ties the version assertion
+    # below.
+    - name: Load the role defaults
       ansible.builtin.include_vars:
         file: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/defaults/main.yml"
         name: mozhi_defaults
