@@ -22,7 +22,7 @@
 # The negative control against an unconfigured Mozhi lives in `default`, which
 # runs on every push, rather than being repeated in this bump-gated scenario.
 
-- name: Verify a self-built Mozhi
+- name: Verify self-built Mozhi
   hosts: all
   become: true
   gather_facts: false
