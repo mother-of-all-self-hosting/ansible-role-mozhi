@@ -82,13 +82,13 @@
         cmd: journalctl -xeu mozhi.service
       changed_when: false
 
-    - name: Read the Mozhi container the role created
+    - name: Inspect Mozhi container
       ansible.builtin.command:
         cmd: "docker container inspect {{ mozhi_molecule_container }}"
       register: mozhi_container_raw
       changed_when: false
 
-    - name: Make sense of the Mozhi container
+    - name: Parse the Mozhi container definition
       ansible.builtin.set_fact:
         mozhi_container: "{{ (mozhi_container_raw.stdout | from_json)[0] }}"
 
