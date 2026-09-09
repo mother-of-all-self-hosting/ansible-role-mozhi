@@ -50,6 +50,8 @@
       - "<option value=\"{{ mozhi_environment_variables_mozhi_default_target_lang }}\" selected>"
 
   tasks:
+    - name: Verify that Mozhi works
+      block:
     # The role is not included in this playbook, so its defaults are not in
     # scope. Reading defaults/main.yml directly ties the version assertion
     # below.
@@ -263,3 +265,19 @@
           - "Mozhi source: {{ mozhi_defaults.mozhi_container_image_self_build_repo }} at {{ mozhi_selfbuild_head.stdout | trim }}"
           - "Mozhi image: {{ mozhi_container.Config.Image }} ({{ mozhi_container.Image }}), built with {{ mozhi_build_info.json }}"
           - "Mozhi engines: {{ mozhi_engines.json.keys() | sort | list }}"
+
+      rescue:
+        # Whatever went wrong, the reason is almost always in the systemd service log.
+        - name: Retrieve the Mozhi systemd service log
+          ansible.builtin.command:
+            cmd: journalctl --no-pager --output=cat --unit=mozhi.service
+          register: mozhi_service_log
+          changed_when: false
+
+        - name: Show the Mozhi systemd service log
+          ansible.builtin.debug:
+            var: mozhi_service_log.stdout_lines
+
+        - name: Fail because verification did not pass
+          ansible.builtin.fail:
+            msg: "Mozhi verification failed. The systemd service log is printed above."
