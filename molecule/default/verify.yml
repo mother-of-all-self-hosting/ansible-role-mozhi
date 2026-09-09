@@ -137,7 +137,7 @@
         - name: Start a Mozhi with none of the role's configuration
           ansible.builtin.command:
             cmd: >-
-              docker run -d -rm
+              docker run -d --rm
               --name {{ mozhi_verify_control_container }}
               --network {{ mozhi_molecule_container_network }}
               -p 127.0.0.1:{{ mozhi_molecule_control_port }}:{{ mozhi_molecule_control_container_port }}
