@@ -49,6 +49,9 @@
       - "<option value=\"{{ mozhi_environment_variables_mozhi_default_source_lang }}\" selected>"
       - "<option value=\"{{ mozhi_environment_variables_mozhi_default_target_lang }}\" selected>"
 
+    mozhi_verify_units:
+      - mozhi.service
+
   tasks:
     - name: Verify that Mozhi works
       block:
@@ -64,13 +67,14 @@
         # The unit is up
         # ------------------------------------------------------------------
 
-        - name: Wait for the Mozhi systemd service to become active (up to 180s)
+        - name: Wait for the Mozhi systemd services to become active (up to 180s each)
           ansible.builtin.systemd_service:
-            name: mozhi.service
-          register: mozhi_service
-          until: mozhi_service.status.ActiveState == 'active'
+            name: "{{ item }}"
+          register: mozhi_services
+          until: mozhi_services.status.ActiveState == 'active'
           retries: 36
           delay: 5
+          loop: "{{ mozhi_verify_units }}"
           # So that giving up is reported by the assertion below rather than as a
           # wall of systemd unit properties.
           failed_when: false
@@ -78,17 +82,20 @@
         # `Restart=always` in the systemd unit means that even a container which crashes
         # and gets restarted reads as active here, so this is a precondition rather than
         # a result.
-        - name: Assert the Mozhi systemd service is active
+        - name: Assert the Mozhi systemd services are active
           ansible.builtin.assert:
-            that: mozhi_service.status.ActiveState == 'active'
-            fail_msg: "mozhi.service is not active ({{ mozhi_service.status.ActiveState }})"
-            success_msg: "mozhi.service is active"
+            that: mozhi_services.results | map(attribute='status.ActiveState') | unique | list == ['active']
+            fail_msg: >-
+              Not every service is active:
+              {{ dict(mozhi_verify_units | zip(mozhi_services.results | map(attribute='status.ActiveState'))) }}
+            success_msg: "Every systemd service is active"
 
-        - name: Retrieve the Mozhi systemd service log for debugging
+        - name: Retrieve the Mozhi systemd services log for debugging
           when: mozhi_debug_service_enabled | bool
           ansible.builtin.command:
-            cmd: journalctl --no-pager --output=cat --unit=mozhi.service
+            cmd: "journalctl --no-pager --output=cat --unit={{ item }}"
           changed_when: false
+          loop: "{{ mozhi_verify_units }}"
 
         - name: Inspect Mozhi container
           ansible.builtin.command:
@@ -261,7 +268,7 @@
         - name: Show the Mozhi verification summary
           ansible.builtin.debug:
             msg:
-              - "Mozhi systemd: mozhi.service is {{ mozhi_service.status.ActiveState }}"
+              - "Mozhi systemd: {% for unit, state in mozhi_verify_units | zip(mozhi_services.results | map(attribute='status.ActiveState')) %}{{ unit }} ({{ state }}){% if not loop.last %}, {% endif %}{% endfor %}"
               - "Mozhi source: {{ mozhi_defaults.mozhi_container_image_self_build_repo }} at {{ mozhi_selfbuild_head.stdout | trim }}"
               - "Mozhi image: {{ mozhi_container.Config.Image }} ({{ mozhi_container.Image }}), built with {{ mozhi_build_info.json }}"
               - "Mozhi engines: {{ mozhi_engines.json.keys() | sort | list }}"
