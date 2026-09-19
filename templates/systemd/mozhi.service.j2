@@ -41,7 +41,10 @@ ExecStartPre={{ devture_systemd_docker_base_host_command_docker }} create \
       {% for arg in mozhi_container_extra_arguments %}
       {{ arg }} \
       {% endfor %}
-      {{ mozhi_container_image_self_build_name if mozhi_container_image_self_build else mozhi_container_image }}
+      {{ mozhi_container_image_self_build_name if mozhi_container_image_self_build else mozhi_container_image }} \
+      {% for arg in mozhi_process_extra_arguments %}
+      {{ arg }} \
+      {% endfor %}
 
 {% for network in mozhi_container_additional_networks %}
 ExecStartPre={{ devture_systemd_docker_base_host_command_docker }} network connect {{ network }} {{ mozhi_identifier }}
