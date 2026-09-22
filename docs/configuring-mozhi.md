@@ -84,7 +84,7 @@ Take a look at:
 
 - [`defaults/main.yml`](../defaults/main.yml) for some variables that you can customize via your `vars.yml` file. You can override settings (even those that don't have dedicated playbook variables) using the `mozhi_environment_variables_additional_variables` variable
 
-See [this section](https://codeberg.org/aryak/mozhi/src/branch/master/README.md#configuration) on the documentation for a complete list of Mozhi's config options that you can put in `mozhi_environment_variables_additional_variables`.
+Refer to [this section](https://codeberg.org/aryak/mozhi/src/branch/master/README.md#configuration) on the documentation for a complete list of Mozhi's config options that you can put in `mozhi_environment_variables_additional_variables`.
 
 ## Installing
 
