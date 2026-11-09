@@ -20,7 +20,7 @@ traefik.http.middlewares.{{ mozhi_identifier }}-basic-auth.basicauth.users={{ mo
 {% endif %}
 
 {% if mozhi_container_labels_traefik_path_prefix != '/' %}
-traefik.http.middlewares.{{ mozhi_identifier }}-slashless-redirect.redirectregex.regex=^({{ mozhi_container_labels_traefik_path_prefix | quote }})$
+traefik.http.middlewares.{{ mozhi_identifier }}-slashless-redirect.redirectregex.regex=^(https?://[^/]+{{ mozhi_container_labels_traefik_path_prefix | regex_escape }})$
 traefik.http.middlewares.{{ mozhi_identifier }}-slashless-redirect.redirectregex.replacement=${1}/
 {% set middlewares = middlewares + [mozhi_identifier + '-slashless-redirect'] %}
 {% endif %}
