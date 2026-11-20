@@ -22,9 +22,6 @@
   with_items:
     - mozhi_uid
     - mozhi_gid
-    - mozhi_hostname
-    - mozhi_path_prefix
-    - mozhi_container_network
 
 - name: Fail if default Mozhi engine type is invalid
   ansible.builtin.fail:
