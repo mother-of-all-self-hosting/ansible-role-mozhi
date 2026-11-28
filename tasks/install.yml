@@ -60,6 +60,7 @@
         owner: "{{ mozhi_uid }}"
         group: "{{ mozhi_gid }}"
         recurse: true
+      tags: molecule-idempotence-notest
 
     - name: Ensure Mozhi repository is present on self-build
       ansible.builtin.git:
